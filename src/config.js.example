@@ -1,0 +1,13 @@
+import path from 'path';
+
+export const PATH_DB = path.join(__dirname, '/../files/database.sqlite');
+
+export const TOKEN_BOT = '';
+export const GOOGLE_DOC_ID = '';
+
+export const SOCKS_PROXY = {
+  socksHost: '',
+  socksPort: '',
+  socksUsername: '',
+  socksPassword: ''
+};

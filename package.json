@@ -39,7 +39,7 @@
     "moment": "^2.22.2",
     "sequelize": "^4.38.0",
     "socks5-https-client": "^1.2.1",
-    "sqlite3": "^4.0.2",
+    "sqlite3": "^4.1.0",
     "telegraf": "^3.22.1"
   }
 }

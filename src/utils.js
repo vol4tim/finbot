@@ -1,18 +1,20 @@
-import moment from 'moment';
-import BigNumber from 'bignumber.js';
-import { getListByName, addRow, delRow } from './google_doc';
-import Finance from './models/finance';
+import moment from "moment";
+import BigNumber from "bignumber.js";
+import { getListByName, addRow, delRow } from "./google_doc";
+import Finance from "./models/finance";
 
-export const numToStr = num => {
+export const numToStr = (num) => {
   return BigNumber(num).toString(10);
 };
 
-export const toDoc = num => {
-  return num.replace('.', ',');
+export const toDoc = (num) => {
+  return num.replace(".", ",");
 };
 
-export const fromDoc = num => {
-  const numEsc = num.replace(new RegExp('[^0-9,.]', 'g'), '').replace(',', '.');
+export const fromDoc = (num) => {
+  const numEsc = num
+    .replace(new RegExp("[^0-9,.-]", "g"), "")
+    .replace(",", ".");
   if (numEsc) {
     return numEsc;
   }
@@ -37,31 +39,31 @@ export const financeAdd = (
     currency,
     category,
     comment,
-    file
+    file,
   })
-    .then(res => {
+    .then((res) => {
       finRow = res;
       return getListByName(username);
     })
-    .then(list => {
+    .then((list) => {
       if (list === false) {
         return false;
       }
       return addRow(list, {
-        Когда: moment(new Date()).format('DD.MM.YYYY'),
+        Когда: moment(new Date()).format("DD.MM.YYYY"),
         Тип: currency.toUpperCase(),
-        Приход: type === 1 ? toDoc(numToStr(sum)) : '',
-        Расход: type === 0 ? toDoc(numToStr(sum)) : '',
+        Приход: type === 1 ? toDoc(numToStr(sum)) : "",
+        Расход: type === 0 ? toDoc(numToStr(sum)) : "",
         Статья: category,
         Комментарий: comment,
         Файл: file,
-        dbid: finRow.id
+        dbid: finRow.id,
       });
     });
 };
 
 export const financeDel = (userId, username, id) => {
-  return getListByName(username).then(list => {
+  return getListByName(username).then((list) => {
     if (list === false) {
       return false;
     }

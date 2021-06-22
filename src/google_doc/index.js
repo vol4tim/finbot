@@ -1,14 +1,15 @@
-import GoogleSpreadsheet from 'google-spreadsheet';
-import Promise from 'bluebird';
-import _ from 'lodash';
-import { GOOGLE_DOC_ID } from '../config';
-import creds from './client_secret.json';
+import GoogleSpreadsheet from "google-spreadsheet";
+import Promise from "bluebird";
+import _ from "lodash";
+import { GOOGLE_DOC_ID } from "../config";
+import creds from "./client_secret.json";
 
 const doc = new GoogleSpreadsheet(GOOGLE_DOC_ID);
+// console.log(doc.getInfo());
 
 export default () => {
   return new Promise((resolve, reject) => {
-    doc.useServiceAccountAuth(creds, err => {
+    doc.useServiceAccountAuth(creds, (err) => {
       if (err) {
         reject(err);
       }
@@ -17,23 +18,23 @@ export default () => {
   });
 };
 
-export const createList = name => {
+export const createList = (name) => {
   return new Promise((resolve, reject) => {
     doc.addWorksheet(
       {
         title: name,
         headers: [
-          'Когда',
-          'Тип',
-          'Приход',
-          'Расход',
-          'Статья',
-          'Комментарий',
-          'Файл',
-          'dbid'
-        ]
+          "Когда",
+          "Тип",
+          "Приход",
+          "Расход",
+          "Статья",
+          "Комментарий",
+          "Файл",
+          "dbid",
+        ],
       },
-      err => {
+      (err) => {
         if (err) {
           reject(err);
         }
@@ -43,7 +44,7 @@ export const createList = name => {
   });
 };
 
-export const getListByName = name => {
+export const getListByName = (name) => {
   return new Promise((resolve, reject) => {
     doc.getInfo((err, info) => {
       if (err) {
@@ -80,8 +81,8 @@ export const getRows = (list, query = {}) => {
 export const delRow = (list, id) => {
   return getRows(list, {
     offset: id,
-    limit: 1
-  }).then(rows => {
+    limit: 1,
+  }).then((rows) => {
     if (rows.length === 1) {
       rows[0].del();
       return true;

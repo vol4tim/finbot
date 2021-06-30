@@ -7,16 +7,16 @@ import creds from "./client_secret.json";
 const doc = new GoogleSpreadsheet(GOOGLE_DOC_ID);
 // console.log(doc.getInfo());
 
-export default () => {
+export default function authGoogle() {
   return new Promise((resolve, reject) => {
     doc.useServiceAccountAuth(creds, (err) => {
       if (err) {
-        reject(err);
+        return reject(err);
       }
       resolve(true);
     });
   });
-};
+}
 
 export const createList = (name) => {
   return new Promise((resolve, reject) => {
@@ -36,7 +36,7 @@ export const createList = (name) => {
       },
       (err) => {
         if (err) {
-          reject(err);
+          return reject(err);
         }
         resolve(true);
       }
@@ -48,7 +48,7 @@ export const getListByName = (name) => {
   return new Promise((resolve, reject) => {
     doc.getInfo((err, info) => {
       if (err) {
-        reject(err);
+        return reject(err);
       }
       const list = _.find(info.worksheets, { title: name });
       resolve(list);
@@ -60,7 +60,7 @@ export const addRow = (list, data) => {
   return new Promise((resolve, reject) => {
     list.addRow(data, (err, row) => {
       if (err) {
-        reject(err);
+        return reject(err);
       }
       resolve(row);
     });
@@ -71,7 +71,7 @@ export const getRows = (list, query = {}) => {
   return new Promise((resolve, reject) => {
     list.getRows(query, (err, rows) => {
       if (err) {
-        reject(err);
+        return reject(err);
       }
       resolve(rows);
     });

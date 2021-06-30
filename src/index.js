@@ -5,6 +5,7 @@ import bot from "./bot";
 import scenes from "./scenes";
 import User from "./models/user";
 import authGoogle, { createList, getListByName } from "./google_doc";
+import db from "./models/db";
 // import sync from './sync';
 
 const runApp = () => {
@@ -49,6 +50,8 @@ const runApp = () => {
   });
   bot.startPolling();
 };
-runApp();
+db.sequelize.sync().then(() => {
+  runApp();
+});
 
 // sync().then(() => runApp());

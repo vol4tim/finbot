@@ -16,15 +16,15 @@ scene.enter((ctx) => {
     .then((rows) => {
       const list = {};
       rows.forEach((row) => {
-        const add = new BigNumber(fromDoc(row["приход"]));
-        const sub = new BigNumber(fromDoc(row["расход"]));
-        if (!_.has(list, row["тип"])) {
-          list[row["тип"]] = new BigNumber(0);
+        const add = new BigNumber(fromDoc(row["Приход"]));
+        const sub = new BigNumber(fromDoc(row["Расход"]));
+        if (!_.has(list, row["Тип"])) {
+          list[row["Тип"]] = new BigNumber(0);
         }
         if (add.eq(0)) {
-          list[row["тип"]] = list[row["тип"]].minus(sub);
+          list[row["Тип"]] = list[row["Тип"]].minus(sub);
         } else {
-          list[row["тип"]] = list[row["тип"]].plus(add);
+          list[row["Тип"]] = list[row["Тип"]].plus(add);
         }
       });
       const msg = ["Ваш баланс:"];

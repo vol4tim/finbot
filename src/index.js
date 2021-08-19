@@ -28,7 +28,9 @@ const runApp = () => {
 
   authGoogle()
     .then((r) => {
-      console.log(r);
+      r.loadInfo().then(() => {
+        console.log(r.title);
+      });
     })
     .catch((e) => {
       console.log(e);

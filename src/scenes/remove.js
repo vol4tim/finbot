@@ -1,63 +1,63 @@
-import Telegraf from 'telegraf';
-import WizardScene from 'telegraf/scenes/wizard';
-import BigNumber from 'bignumber.js';
-import { financeDel, fromDoc, numToStr } from '../utils';
-import { getListByName, getRows } from '../google_doc';
+import Telegraf from "telegraf";
+import WizardScene from "telegraf/scenes/wizard";
+import BigNumber from "bignumber.js";
+import { financeDel, fromDoc, numToStr } from "../utils";
+import { getListByName, getRows } from "../google_doc";
 
 const scene = new WizardScene(
-  'remove',
-  ctx => {
+  "remove",
+  (ctx) => {
     ctx.scene.state.id = 0;
-    ctx.reply('Укажите номер удаляемой записи');
+    ctx.reply("Укажите номер удаляемой записи");
     return ctx.wizard.next();
   },
-  ctx => {
+  (ctx) => {
     if (ctx.message) {
       ctx.scene.state.id = Number(ctx.message.text);
     }
     if (ctx.scene.state.id <= 0) {
-      ctx.reply('Запись не найдена');
+      ctx.reply("Запись не найдена");
       return ctx.scene.leave();
     }
     return getListByName(ctx.message.from.username)
-      .then(list => {
+      .then((list) => {
         if (list === false) {
           return false;
         }
         return getRows(list, {
           offset: ctx.scene.state.id,
-          limit: 1
+          limit: 1,
         });
       })
-      .then(rows => {
+      .then((rows) => {
         if (rows.length === 1) {
-          const add = new BigNumber(fromDoc(rows[0]['приход']));
-          const sub = new BigNumber(fromDoc(rows[0]['расход']));
+          const add = new BigNumber(fromDoc(rows[0]["Приход"]));
+          const sub = new BigNumber(fromDoc(rows[0]["Расход"]));
           const msg =
-            'Вы действительно хотите удалить запись?\n' +
-            rows[0]['когда'] +
-            ' ' +
-            (add > 0 ? 'приход ' + numToStr(add) : 'расход ' + numToStr(sub)) +
-            ' ' +
-            rows[0]['тип'] +
-            ' | ' +
-            rows[0]['статья'] +
-            '\n' +
-            rows[0]['комментарий'];
+            "Вы действительно хотите удалить запись?\n" +
+            rows[0]["когда"] +
+            " " +
+            (add > 0 ? "приход " + numToStr(add) : "расход " + numToStr(sub)) +
+            " " +
+            rows[0]["Тип"] +
+            " | " +
+            rows[0]["Статья"] +
+            "\n" +
+            rows[0]["Комментарий"];
           ctx.reply(
             msg,
             Telegraf.Markup.inlineKeyboard([
-              Telegraf.Markup.callbackButton('Подтвердить', 'NEXT+1'),
-              Telegraf.Markup.callbackButton('Отмена', 'cancel')
+              Telegraf.Markup.callbackButton("Подтвердить", "NEXT+1"),
+              Telegraf.Markup.callbackButton("Отмена", "cancel"),
             ]).extra()
           );
         } else {
-          ctx.reply('Запись не найдена');
+          ctx.reply("Запись не найдена");
           return ctx.scene.leave();
         }
       });
   },
-  ctx => {
+  (ctx) => {
     let userId;
     let username;
     if (ctx.message) {
@@ -67,28 +67,28 @@ const scene = new WizardScene(
       userId = ctx.callbackQuery.from.id;
       username = ctx.callbackQuery.from.username;
     } else {
-      ctx.reply('error');
+      ctx.reply("error");
       return ctx.scene.leave();
     }
-    financeDel(userId, username, ctx.scene.state.id).then(result => {
+    financeDel(userId, username, ctx.scene.state.id).then((result) => {
       if (result === false) {
-        ctx.reply('Запись не найдена');
+        ctx.reply("Запись не найдена");
       } else {
-        ctx.reply('Запись удалена');
+        ctx.reply("Запись удалена");
       }
     });
     return ctx.scene.leave();
   }
 );
-scene.action('NEXT+1', ctx => {
+scene.action("NEXT+1", (ctx) => {
   return ctx.wizard.steps[ctx.wizard.cursor + 1](ctx);
 });
-scene.action('cancel', ctx => {
-  ctx.reply('Canceled');
+scene.action("cancel", (ctx) => {
+  ctx.reply("Canceled");
   return ctx.scene.leave();
 });
-scene.command('cancel', ctx => {
-  ctx.reply('Canceled');
+scene.command("cancel", (ctx) => {
+  ctx.reply("Canceled");
   return ctx.scene.leave();
 });
 

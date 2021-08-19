@@ -1,60 +1,38 @@
-import GoogleSpreadsheet from "google-spreadsheet";
+import { GoogleSpreadsheet } from "google-spreadsheet";
 import Promise from "bluebird";
-import _ from "lodash";
 import { GOOGLE_DOC_ID } from "../config";
 import creds from "./client_secret.json";
 
 const doc = new GoogleSpreadsheet(GOOGLE_DOC_ID);
-// console.log(doc.getInfo());
 
-export default function authGoogle() {
-  return new Promise((resolve, reject) => {
-    doc.useServiceAccountAuth(creds, (err) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(true);
-    });
+export default async function authGoogle() {
+  await doc.useServiceAccountAuth({
+    client_email: creds.client_email,
+    private_key: creds.private_key,
+  });
+  return doc;
+}
+
+export async function createList(name) {
+  return await doc.addSheet({
+    title: name,
+    headerValues: [
+      "Когда",
+      "Тип",
+      "Приход",
+      "Расход",
+      "Статья",
+      "Комментарий",
+      "Файл",
+      "dbid",
+    ],
   });
 }
 
-export const createList = (name) => {
-  return new Promise((resolve, reject) => {
-    doc.addWorksheet(
-      {
-        title: name,
-        headers: [
-          "Когда",
-          "Тип",
-          "Приход",
-          "Расход",
-          "Статья",
-          "Комментарий",
-          "Файл",
-          "dbid",
-        ],
-      },
-      (err) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(true);
-      }
-    );
-  });
-};
-
-export const getListByName = (name) => {
-  return new Promise((resolve, reject) => {
-    doc.getInfo((err, info) => {
-      if (err) {
-        return reject(err);
-      }
-      const list = _.find(info.worksheets, { title: name });
-      resolve(list);
-    });
-  });
-};
+export async function getListByName(name) {
+  await doc.loadInfo();
+  return doc.sheetsByTitle[name];
+}
 
 export const addRow = (list, data) => {
   return new Promise((resolve, reject) => {
@@ -67,16 +45,9 @@ export const addRow = (list, data) => {
   });
 };
 
-export const getRows = (list, query = {}) => {
-  return new Promise((resolve, reject) => {
-    list.getRows(query, (err, rows) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(rows);
-    });
-  });
-};
+export async function getRows(sheet, query = {}) {
+  return await sheet.getRows(query);
+}
 
 export const delRow = (list, id) => {
   return getRows(list, {

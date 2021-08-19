@@ -1,7 +1,7 @@
 import { GoogleSpreadsheet } from "google-spreadsheet";
 import Promise from "bluebird";
 import { GOOGLE_DOC_ID } from "../config";
-import creds from "./client_secret.json";
+import creds from "../../client_secret.json";
 
 const doc = new GoogleSpreadsheet(GOOGLE_DOC_ID);
 

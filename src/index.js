@@ -18,6 +18,7 @@ const runApp = () => {
   bot.command("balance", (ctx) => ctx.scene.enter("balance"));
   bot.command("view", (ctx) => ctx.scene.enter("view"));
   bot.command("history", (ctx) => ctx.scene.enter("history"));
+  bot.command("report", (ctx) => ctx.scene.enter("report"));
 
   bot.hears("Приход", (ctx) => ctx.scene.enter("add"));
   bot.hears("Расход", (ctx) => ctx.scene.enter("sub"));

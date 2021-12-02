@@ -34,6 +34,15 @@ export async function getListByName(name) {
   return doc.sheetsByTitle[name];
 }
 
+export async function getLists() {
+  await doc.loadInfo();
+  const lists = [];
+  for (let index = 0; index < doc.sheetCount; index++) {
+    lists.push(doc.sheetsByIndex[index]);
+  }
+  return lists;
+}
+
 export const addRow = (list, data) => {
   return new Promise((resolve, reject) => {
     list.addRow(data, (err, row) => {

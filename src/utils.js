@@ -8,17 +8,27 @@ export const numToStr = (num) => {
 };
 
 export const toDoc = (num) => {
-  return num.replace(".", ",");
+  try {
+    return num.replace(".", ",");
+  } catch (error) {
+    console.log(num, error.message);
+    return "0";
+  }
 };
 
 export const fromDoc = (num) => {
-  const numEsc = num
-    .replace(new RegExp("[^0-9,.-]", "g"), "")
-    .replace(",", ".");
-  if (numEsc) {
-    return numEsc;
+  try {
+    const numEsc = num
+      .replace(new RegExp("[^0-9,.-]", "g"), "")
+      .replace(",", ".");
+    if (numEsc) {
+      return numEsc;
+    }
+    return 0;
+  } catch (error) {
+    console.log(num, error.message);
+    return 0;
   }
-  return 0;
 };
 
 export const financeAdd = (

@@ -35,7 +35,7 @@
     "google-spreadsheets": "^2.0.0",
     "googleapis": "^32.0.0",
     "json2csv": "^4.1.6",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "moment": "^2.22.2",
     "sequelize": "^4.38.0",
     "socks5-https-client": "^1.2.1",
